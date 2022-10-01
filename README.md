@@ -87,7 +87,7 @@
 
 **如下图为报名成功的页面。**
 
-![](https://github.com//unrealnum//Coggle-Oct.ML-personal-learning-clock-in//raw//main//图层//join competition.png)
+![](https://github.com//unrealnum//Coggle-Oct.ML-personal-learning-clock-in//raw//main//图层//join-competition.png)
 
 
 
