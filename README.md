@@ -1,49 +1,44 @@
-# Coggle-Oct.ML-personal-learning-clock-in
+# 【打卡】Kaggle SpaceShip Titanic赛题
 
 
 
-Coggle 10月个人竞赛学习打卡作业
+## TASK 1：比赛报名与尝试
 
 
 
-<!-- vscode-markdown-toc -->
-* 1. [Coggle任务点打卡](#Coggle)
-* 2. [个人挑战思路及记录](#)
 
-<!-- vscode-markdown-toc-config
-	numbering=true
-	autoSave=true
-	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+
+## TASK 2：比赛数据分析
 
 
 
-##  1. <a name='Coggle'></a>Coggle任务点打卡
-
-> 随着任务点的完成会逐渐添加链接~
 
 
-
-* [ ] 比赛报名与尝试
-* [ ] 比赛数据分析
-* [ ] 验证集划分与树模型
-* [ ] 特征工程入门
-* [ ] 特征工程进阶
-* [ ] 树模型进阶
-* [ ] 多折训练与集成
+## TASK3：验证集划分与树模型
 
 
 
-##  2. <a name=''></a>个人挑战思路及记录
-
-> 随着任务点的完成会逐渐添加链接~
 
 
+## TASK4：特征工程入门
 
-1. 比赛报名
-2. 探索性数据分析
-3. 模型baseline思考与分析
-4. 数据预处理
-5. 模型训练
-6. 模型优化
+
+
+
+
+## TASK5：特征工程进阶
+
+
+
+
+
+## TASK6：树模型进阶
+
+
+
+
+
+## TASK7：多折训练与集成
+
+
 
