@@ -7,7 +7,13 @@
 	* 1.1. [赛题介绍](#-1)
 	* 1.2. [数据说明](#-1)
 * 2. [TASK 1：比赛报名与尝试](#TASK1)
+	* 2.1. [2.1.报名成功界面](#-1)
+	* 2.2. [2.2.数据初观察](#-1)
+	* 2.3. [目前得到的信息：](#-1)
 * 3. [TASK 2：比赛数据分析](#TASK2)
+	* 3.1. [3.0.等等，先别急](#-1)
+	* 3.2. [3.1.手动删除无效数据](#-1)
+		* 3.2.1. [3.1.1.具体处理](#-1)
 * 4. [TASK3：验证集划分与树模型](#TASK3)
 * 5. [TASK4：特征工程入门](#TASK4)
 * 6. [TASK5：特征工程进阶](#TASK5)
@@ -75,9 +81,225 @@
 
 
 
+###  2.1. <a name='-1'></a>2.1.报名成功界面
+
+<br>
+
+**如下图为报名成功的页面。**
+
+![](图层\join competition.png)
+
+
+
+<br>
+
+###  2.2. <a name='-1'></a>2.2.数据初观察
+
+
+
+导入可能需要使用的库：<br>
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+```
+
+<br>
+
+打印部分数据：<br>
+
+```python
+df = pd.read_csv('train.csv')
+print(df.head(5))
+print("----------------------------------------------------------------------------------")
+print(df.tail(5))
+```
+
+<br>
+
+结果为：<br>
+
+```shell
+  PassengerId HomePlanet CryoSleep  ... VRDeck               Name  Transported
+0     0001_01     Europa     False  ...    0.0    Maham Ofracculy        False
+1     0002_01      Earth     False  ...   44.0       Juanna Vines         True
+2     0003_01     Europa     False  ...   49.0      Altark Susent        False
+3     0003_02     Europa     False  ...  193.0       Solam Susent        False
+4     0004_01      Earth     False  ...    2.0  Willy Santantines         True
+
+[5 rows x 14 columns]
+----------------------------------------------------------------------------------
+     PassengerId HomePlanet CryoSleep  ...  VRDeck               Name  Transported
+8688     9276_01     Europa     False  ...    74.0  Gravior Noxnuther        False
+8689     9278_01      Earth      True  ...     0.0    Kurta Mondalley        False
+8690     9279_01      Earth     False  ...     0.0       Fayey Connon         True
+8691     9280_01     Europa     False  ...  3235.0   Celeon Hontichre        False
+8692     9280_02     Europa     False  ...    12.0   Propsh Hontichre         True
+
+[5 rows x 14 columns]
+```
+
+<br>
+
+打印所有的特征名字：<br>
+
+```python
+print(df.columns)
+```
+
+```shell
+Index(['PassengerId', 'HomePlanet', 'CryoSleep', 'Cabin', 'Destination', 'Age',
+       'VIP', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck',
+       'Name', 'Transported'],
+      dtype='object')
+```
+
+<br>
+
+打印数据集形状：<br>
+
+```python
+print(df.shape)
+```
+
+```sh
+(8693, 14)
+```
+
+<br>
+
+通过Kaggle自带的数据分布及属性显示得到：<br>
+
+* 部分特征存在缺失值，占总量的2%（217）左右
+* **被传送的人数相较于未被传送的人数占比过少**
+* 年龄大致呈正态分布
+
+<br>
+
+###  2.3. <a name='-1'></a>目前得到的信息：
+
+* 训练集数据总量为8693条
+* 数据特征量为13
+* 14个特征/标签的名字
+
+<br>
+
 ##  3. <a name='TASK2'></a>TASK 2：比赛数据分析
 
 <br>
+
+针对初步观察的情况，问题为二分类问题/异常检测问题（将被传送视为异常），总的特征有14个。<br>
+
+决定先通过人工观察删除部分无效数据，然后对异常数据（缺失值等）进行处理。<br>
+
+###  3.1. <a name='-1'></a>3.0.等等，先别急
+
+<br>
+
+把`df.head()`与`df.tail()`的封印先解除。<br>
+
+```python
+df = pd.read_csv('train.csv')
+pd.set_option('display.max_columns', None)  #解除最小显示列数的限制
+print(df.head(5))
+print("----------------------------------------------------------------------------------")
+print(df.tail(5))
+```
+
+```shell
+  PassengerId HomePlanet CryoSleep  Cabin  Destination   Age    VIP  \
+0     0001_01     Europa     False  B/0/P  TRAPPIST-1e  39.0  False   
+1     0002_01      Earth     False  F/0/S  TRAPPIST-1e  24.0  False   
+2     0003_01     Europa     False  A/0/S  TRAPPIST-1e  58.0   True   
+3     0003_02     Europa     False  A/0/S  TRAPPIST-1e  33.0  False   
+4     0004_01      Earth     False  F/1/S  TRAPPIST-1e  16.0  False   
+
+   RoomService  FoodCourt  ShoppingMall     Spa  VRDeck               Name  \
+0          0.0        0.0           0.0     0.0     0.0    Maham Ofracculy   
+1        109.0        9.0          25.0   549.0    44.0       Juanna Vines   
+2         43.0     3576.0           0.0  6715.0    49.0      Altark Susent   
+3          0.0     1283.0         371.0  3329.0   193.0       Solam Susent   
+4        303.0       70.0         151.0   565.0     2.0  Willy Santantines   
+
+   Transported  
+0        False  
+1         True  
+2        False  
+3        False  
+4         True  
+----------------------------------------------------------------------------------
+     PassengerId HomePlanet CryoSleep     Cabin    Destination   Age    VIP  \
+8688     9276_01     Europa     False    A/98/P    55 Cancri e  41.0   True   
+8689     9278_01      Earth      True  G/1499/S  PSO J318.5-22  18.0  False   
+8690     9279_01      Earth     False  G/1500/S    TRAPPIST-1e  26.0  False   
+8691     9280_01     Europa     False   E/608/S    55 Cancri e  32.0  False   
+8692     9280_02     Europa     False   E/608/S    TRAPPIST-1e  44.0  False   
+
+      RoomService  FoodCourt  ShoppingMall     Spa  VRDeck               Name  \
+8688          0.0     6819.0           0.0  1643.0    74.0  Gravior Noxnuther   
+8689          0.0        0.0           0.0     0.0     0.0    Kurta Mondalley   
+8690          0.0        0.0        1872.0     1.0     0.0       Fayey Connon   
+8691          0.0     1049.0           0.0   353.0  3235.0   Celeon Hontichre   
+8692        126.0     4688.0           0.0     0.0    12.0   Propsh Hontichre   
+
+      Transported  
+8688        False  
+8689        False  
+8690         True  
+8691        False  
+8692         True  
+```
+
+**现在好多了~<br>**
+
+
+
+###  3.2. <a name='-1'></a>3.1.手动删除无效数据
+
+<br>
+
+通过观察得到：<br>
+
+* `'PassengerId'`<font color='red'>**暂时**</font>不作为特征进行处理。<br>
+
+> - `PassengerId` - A unique Id for each passenger. Each Id takes the form `gggg_pp` where `gggg` indicates a group the passenger is travelling with and `pp` is their number within the group. People in a group are often family members, but not always.
+>
+> * PassengerId - 每位乘客的唯一 ID。每个 Id 采用 gggg_pp 的形式，其中 gggg 表示乘客旅行的组，pp 是他们在组中的编号。群体中的人通常是家庭成员，但并非总是如此。
+>
+> 这是可能作为特征的（一个组里的一起传的概率会不会更大？），但这里先不考虑。
+
+* `name`不作为特征进行处理。<br>
+* 将`transported`单独切分为待预测的标签。<br>
+
+####  3.2.1. <a name='-1'></a>3.1.1.具体处理
+
+<br>
+
+```python
+df.drop(['Name'], axis=1, inplace=True)
+df.drop(['PassengerId'], axis=1, inplace=True)
+print(df.shape)
+print(df.head(3))
+```
+
+```shell
+(8693, 12)
+  HomePlanet CryoSleep  Cabin  Destination   Age    VIP  RoomService  \
+0     Europa     False  B/0/P  TRAPPIST-1e  39.0  False          0.0   
+1      Earth     False  F/0/S  TRAPPIST-1e  24.0  False        109.0   
+2     Europa     False  A/0/S  TRAPPIST-1e  58.0   True         43.0   
+
+   FoodCourt  ShoppingMall     Spa  VRDeck  Transported  
+0        0.0           0.0     0.0     0.0        False  
+1        9.0          25.0   549.0    44.0         True  
+2     3576.0           0.0  6715.0    49.0        False  
+```
+
+**可以看到相关特征已经被删除了。**<br>
+
+
 
 
 
