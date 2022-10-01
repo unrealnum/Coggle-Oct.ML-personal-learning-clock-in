@@ -6,11 +6,19 @@ Coggle 10月个人竞赛学习打卡作业
 
 
 
-[toc]
+<!-- vscode-markdown-toc -->
+* 1. [Coggle任务点打卡](#Coggle)
+* 2. [个人挑战思路及记录](#)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
 
 
 
-## Coggle任务点打卡
+##  1. <a name='Coggle'></a>Coggle任务点打卡
 
 > 随着任务点的完成会逐渐添加链接~
 
@@ -26,7 +34,7 @@ Coggle 10月个人竞赛学习打卡作业
 
 
 
-## 个人挑战思路及记录
+##  2. <a name=''></a>个人挑战思路及记录
 
 > 随着任务点的完成会逐渐添加链接~
 
